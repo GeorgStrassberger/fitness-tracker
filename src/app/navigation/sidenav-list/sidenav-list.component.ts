@@ -19,12 +19,9 @@ export class SidenavListComponent implements OnInit, OnDestroy {
   authSubscription!: Subscription;
 
   constructor(private authService: AuthService) {}
-  ngOnDestroy(): void {
-    throw new Error('Method not implemented.');
-  }
 
   ngOnInit(): void {
-    this.authSubscription = this.authService.authChange.subscribe(
+    this.authSubscription = this.authService.authChange$.subscribe(
       (authStatus) => {
         this.isAuth = authStatus;
       }
@@ -32,10 +29,16 @@ export class SidenavListComponent implements OnInit, OnDestroy {
   }
 
   onClose(): void {
+    console.log('emit closeSidenav');
     this.closeSidenav.emit();
   }
 
-  onDestroy() {
+  onLogout(): void {
+    this.onClose();
+    this.authService.logout();
+  }
+
+  ngOnDestroy() {
     this.authSubscription.unsubscribe();
   }
 }
