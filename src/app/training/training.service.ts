@@ -20,7 +20,7 @@ export class TrainingService {
     return this.availableExercises.slice();
   }
 
-  startExercise(selectedID: string) {
+  startExercise(selectedID: string): void {
     const selectedExercise = this.availableExercises.find(
       (exercise: Exercise): boolean => exercise.id === selectedID
     );
@@ -31,7 +31,7 @@ export class TrainingService {
     }
   }
 
-  completeExercise() {
+  completeExercise(): void {
     if (this.runningExercise) {
       this.exercises.push({
         ...this.runningExercise,
@@ -43,21 +43,25 @@ export class TrainingService {
     this.exerciseChanged$.next(null);
   }
 
-  cancelExercise(progress: number) {
+  cancelExercise(progress: number): void {
     if (this.runningExercise) {
       this.exercises.push({
         ...this.runningExercise,
         duration: this.runningExercise.duration * (progress / 100),
-        calories: this.runningExercise.duration * (progress / 100),
+        calories: this.runningExercise.calories * (progress / 100),
         date: new Date(),
-        state: 'cancalled',
+        state: 'cancelled',
       });
     }
     this.runningExercise = null;
     this.exerciseChanged$.next(null);
   }
 
-  getRunningExerice() {
+  getRunningExercise() {
     return { ...this.runningExercise };
+  }
+
+  getCompletedOrCancelledExercises(): Exercise[] {
+    return this.exercises.slice();
   }
 }

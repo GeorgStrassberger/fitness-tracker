@@ -25,7 +25,7 @@ export class CurrentTrainingComponent implements OnInit {
 
   startOrResumeTimer(): void {
     let step: number = 1000;
-    let currentExercise = this.trainingService.getRunningExerice();
+    let currentExercise = this.trainingService.getRunningExercise();
     if (currentExercise) {
       step = (currentExercise.duration! / 100) * 1000;
     }
