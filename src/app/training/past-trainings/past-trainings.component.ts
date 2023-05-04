@@ -9,18 +9,12 @@ import { TrainingService } from '../training.service';
   styleUrls: ['./past-trainings.component.css'],
 })
 export class PastTrainingsComponent implements OnInit {
-  displayedColumns: string[] = [
-    'date',
-    'name',
-    'calories',
-    'duration',
-    'state',
-  ];
+  displayedColumns = ['date', 'name', 'duration', 'calories', 'state'];
   dataSource = new MatTableDataSource<Exercise>();
 
   constructor(private trainingService: TrainingService) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.dataSource.data =
       this.trainingService.getCompletedOrCancelledExercises();
   }

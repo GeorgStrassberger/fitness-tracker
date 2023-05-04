@@ -8,25 +8,21 @@ import { Exercise } from './exercise.model';
   templateUrl: './training.component.html',
   styleUrls: ['./training.component.css'],
 })
-export class TrainingComponent implements OnInit, OnDestroy {
-  onGoingTraining: boolean = false;
-  exerciseSubsribten!: Subscription;
+export class TrainingComponent implements OnInit {
+  ongoingTraining = false;
+  exerciseSubscription: Subscription;
 
   constructor(private trainingService: TrainingService) {}
 
   ngOnInit() {
-    this.exerciseSubsribten = this.trainingService.exerciseChanged$.subscribe(
+    this.exerciseSubscription = this.trainingService.exerciseChanged.subscribe(
       (exercise) => {
         if (exercise) {
-          this.onGoingTraining = true;
+          this.ongoingTraining = true;
         } else {
-          this.onGoingTraining = false;
+          this.ongoingTraining = false;
         }
       }
     );
-  }
-
-  ngOnDestroy(): void {
-    this.exerciseSubsribten.unsubscribe();
   }
 }

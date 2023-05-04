@@ -13,11 +13,11 @@ export class NewTrainingComponent implements OnInit {
 
   constructor(private trainingService: TrainingService) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.exercises = this.trainingService.getAvailableExercises();
   }
 
-  onStartTraining(form: NgForm): void {
-    this.trainingService.startExercise(form.value.exercise); // exercise is the key who stored the selected exersice.id in the form {object}
+  onStartTraining(form: NgForm) {
+    this.trainingService.startExercise(form.value.exercise);
   }
 }
