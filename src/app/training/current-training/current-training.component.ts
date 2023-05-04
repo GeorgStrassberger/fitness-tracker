@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { StopTrainingComponent } from './stop-training.component';
 import { TrainingService } from '../training.service';
+import { TimerHandle } from 'rxjs/internal/scheduler/timerHandle';
 
 @Component({
   selector: 'app-current-training',
@@ -10,7 +11,7 @@ import { TrainingService } from '../training.service';
 })
 export class CurrentTrainingComponent implements OnInit {
   progress = 0;
-  timer: number;
+  timer: TimerHandle;
 
   constructor(
     private dialog: MatDialog,
