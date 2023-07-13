@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TimerHandle } from 'rxjs/internal/scheduler/timerHandle';
-import { StopTrainingComponent } from './stop-training.component';
+import { StopTrainingComponent } from '../stop-training/stop-training.component';
 import { TrainingService } from '../training.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { TrainingService } from '../training.service';
 export class CurrentTrainingComponent implements OnInit {
   @Output() trainingExit = new EventEmitter<void>();
   progress: number = 0;
-  intervalID?: TimerHandle;
+  timer!: TimerHandle;
 
   constructor(
     private dialog: MatDialog,
@@ -23,26 +23,26 @@ export class CurrentTrainingComponent implements OnInit {
     this.startOrResumeTimer();
   }
 
-  startOrResumeTimer(): void {
-    let step: number = 1000;
-    let currentExercise = this.trainingService.getRunningExercise();
-    if (currentExercise) {
-      step = (currentExercise.duration! / 100) * 1000;
+  startOrResumeTimer() {
+    const runningExercise = this.trainingService.getRunningExercise();
+    if (runningExercise) {
+      const step = (runningExercise.duration / 100) * 1000;
+      this.timer = setInterval(() => {
+        this.progress = this.progress + 1;
+        if (this.progress >= 100) {
+          this.trainingService.completeExercise();
+          clearInterval(this.timer);
+        }
+      }, step);
     }
-
-    this.intervalID = setInterval(() => {
-      this.progress = this.progress + 1;
-      if (this.progress >= 100) {
-        this.trainingService.completeExercise();
-        clearInterval(this.intervalID);
-      }
-    }, step);
   }
 
-  onStop(): void {
-    clearInterval(this.intervalID);
+  onStop() {
+    clearInterval(this.timer);
     const dialogRef = this.dialog.open(StopTrainingComponent, {
-      data: { progress: this.progress },
+      data: {
+        progress: this.progress,
+      },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
